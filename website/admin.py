@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, flash, send_from_directory, redire
 from flask_login import login_required, current_user
 from .forms import ShopItemsForm
 from werkzeug.utils import secure_filename
-from .models import Product
+from .models import Product, Wishlist
 from . import db
 
 admin_id=[1]
@@ -117,6 +117,11 @@ def remove_product(item_id):
     if current_user.id in admin_id:
         try:
             target = Product.query.get(item_id)
+            target_exists = Wishlist.query.filter_by(product_id=item_id).all()
+            
+            for item in target_exists:
+                db.session.delete(item)
+            
             db.session.delete(target)
             db.session.commit()
             flash(f'{target.product_name} has been removed successfully!')
