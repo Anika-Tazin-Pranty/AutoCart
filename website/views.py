@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, flash, redirect, request
+from flask import Blueprint, render_template, flash, redirect, request, jsonify
 from .models import Product, Cart, Wishlist
 from flask_login import login_required, current_user
 from . import db
@@ -131,3 +131,209 @@ def show_wishlist():
         wished_items = []
 
     return render_template('wishlist.html', cart_items=cart_items, wished_items=wished_items)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@views.route('/pluscart')
+@login_required
+def plus_cart():
+    if request.method == 'GET':
+        cart_id = request.args.get('cart_id')
+        cart_item = Cart.query.get(cart_id)
+        cart_item.quantity = cart_item.quantity + 1
+        
+        db.session.commit()
+
+        cart = Cart.query.filter_by(customer_link=current_user.id).all()
+
+        amount = 0
+
+        for item in cart:
+            amount += item.product.current_price * item.quantity
+
+        data = {
+            'quantity': cart_item.quantity,
+            'amount': amount,
+            'total': amount + 200
+        }
+
+        return jsonify(data)
+    
+    
+@views.route('/minuscart')
+@login_required
+def minus_cart():
+    if request.method == 'GET':
+        cart_id = request.args.get('cart_id')
+        cart_item = Cart.query.get(cart_id)
+        cart_item.quantity = cart_item.quantity - 1
+        db.session.commit()
+        cart = Cart.query.filter_by(customer_link=current_user.id).all()
+        amount = 0
+
+        for item in cart:
+            amount += item.product.current_price * item.quantity
+
+        data = {
+            'quantity': cart_item.quantity,
+            'amount': amount,
+            'total': amount + 200
+        }
+
+        return jsonify(data)
+    
+@views.route('removecart')
+@login_required
+def remove_cart():
+    if request.method == 'GET':
+        cart_id = request.args.get('cart_id')
+        cart_item = Cart.query.get(cart_id)
+        db.session.delete(cart_item)
+        db.session.commit()
+
+        cart = Cart.query.filter_by(customer_link=current_user.id).all()
+
+        amount = 0
+
+        for item in cart:
+            amount += item.product.current_price * item.quantity
+
+        data = {
+            'quantity': cart_item.quantity,
+            'amount': amount,
+            'total': amount + 200
+        }
+
+        return jsonify(data)
+
+
+

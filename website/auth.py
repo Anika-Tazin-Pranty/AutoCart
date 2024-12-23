@@ -54,6 +54,7 @@ def login():
             if customer.verify_password(password = password): #returns Boolean
                 login_user(customer)
                 flash(f'Welcome to AutoCart, {customer.username}')
+
                 return redirect('/') # redirect ot homepage
             else:
                 flash('Incorrect Credentials')
@@ -69,6 +70,7 @@ def login():
 def log_out():
     logout_user()
     flash('Logged out successfully!')
+
     return redirect('/') # redirect ot homepage
 
 
@@ -76,6 +78,7 @@ def log_out():
 @login_required
 def profile(customer_id): # for profile view function
     customer = Customer.query.get(customer_id)
+    print(f'Customer ID: {customer_id}')
     return render_template('profile.html', customer = customer)
 
 @auth.route('/change-password/<int:customer_id>', methods = ['GET', 'POST'])
