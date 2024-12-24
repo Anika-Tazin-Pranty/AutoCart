@@ -41,8 +41,13 @@ def create_app():
 <<<<<<< Updated upstream
 =======
     #
+<<<<<<< Updated upstream
 >>>>>>> Stashed changes
     #with app.app_context():
     #   create_database()
+=======
+    with app.app_context():
+      create_database()
+>>>>>>> Stashed changes
 
     return app
