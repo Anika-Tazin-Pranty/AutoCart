@@ -1,20 +1,16 @@
-from flask import Blueprint, render_template, flash
+from flask import Blueprint, render_template, flash , redirect
 from flask_login import login_required, current_user
 from .forms import ShopItemsForm, OrderUpdateForm
 from werkzeug.utils import secure_filename
-<<<<<<< Updated upstream
-from .models import Product
-=======
 from .models import Product, Wishlist, Order, Customer
->>>>>>> Stashed changes
 from . import db
-
+admin_id = [1]
 admin = Blueprint('admin', __name__)
 
 @admin.route('/add-shop-items', methods=['GET','POST'])
 @login_required
 def add_shop_items():
-    if current_user.id == 1: #if admin is the current user e.g. for admin, customer.id is 1
+    if current_user.id in admin_id:#if admin is the current user e.g. for admin, customer.id is 1
         form = ShopItemsForm()
         
         if form.validate_on_submit():
@@ -54,8 +50,7 @@ def add_shop_items():
             pass
         return render_template('add-shop-items.html', form=form)
     
-<<<<<<< Updated upstream
-=======
+
     return render_template('404.html')
 
 @admin.route('/remove-product/<int:item_id>', methods=['GET','POST'])
@@ -128,5 +123,4 @@ def display_customers():
 def admin_page():
     if current_user.id in admin_id:
         return render_template('admin.html')
->>>>>>> Stashed changes
     return render_template('404.html')
