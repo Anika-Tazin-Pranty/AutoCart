@@ -1,8 +1,8 @@
 from flask import Blueprint, render_template, flash, send_from_directory, redirect
 from flask_login import login_required, current_user
-from .forms import ShopItemsForm
+from .forms import ShopItemsForm, OrderUpdateForm
 from werkzeug.utils import secure_filename
-from .models import Product, Wishlist
+from .models import Product, Wishlist, Order, Customer
 from . import db
 
 admin_id=[1]
@@ -133,4 +133,52 @@ def remove_product(item_id):
 
         return redirect('/show-added-cars')
 
+    return render_template('404.html')
+
+@admin.route('/view-orders')
+@login_required
+def view_orders():
+    if current_user.id in admin_id:
+        orders = Order.query.all()
+        return render_template('view_orders.html', orders = orders)
+    return render_template('404.html')
+
+
+@admin.route('/update-order-status/<int:order_id>', methods = ['GET', 'POST'])
+@login_required
+def update_order_status(order_id):
+    if current_user.id in admin_id:
+        form = OrderUpdateForm()
+        order = Order.query.get(order_id)
+
+        if form.validate_on_submit():
+            status = form.order_status.data
+            order.status = status
+
+            try:
+                db.session.commit()
+                flash(f'Order {order_id} Updated successfully')
+                return redirect('/view-orders')
+            except Exception as e:
+                print(e)
+                flash(f'Order {order_id} Update Failed!')
+                return redirect('/view-orders')
+
+        return render_template('update_order_status.html', form=form)
+
+    return render_template('404.html')
+
+@admin.route('/customers')
+@login_required
+def display_customers():
+    if current_user.id in admin_id:
+        customers = Customer.query.all()
+        return render_template('customers.html', customers=customers)
+    return render_template('404.html')
+
+@admin.route('/admin-page')
+@login_required
+def admin_page():
+    if current_user.id in admin_id:
+        return render_template('admin.html')
     return render_template('404.html')
