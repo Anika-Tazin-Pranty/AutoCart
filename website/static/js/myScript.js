@@ -18,6 +18,7 @@ $('.plus-cart').click(function(){
     })
 })
 
+
 $('.minus-cart').click(function(){
     console.log('Button Clicked!')
 
@@ -37,6 +38,7 @@ $('.minus-cart').click(function(){
         }
     })
 })
+
 
 $('.remove-cart').click(function(){
     console.log('Button Clicked!')

@@ -117,12 +117,14 @@ def show_wishlist():
 
     return render_template('wishlist.html', cart_items=cart_items, wished_items=wished_items)
 
+
 @views.route('/pluscart')
 @login_required
 def plus_cart():
     if request.method == 'GET':
         cart_id = request.args.get('cart_id')
         cart_item = Cart.query.get(cart_id)
+
         if cart_item.product.in_stock > 0:
             cart_item.quantity += 1
         db.session.commit()
@@ -137,12 +139,14 @@ def plus_cart():
 
         return jsonify(data)
 
+
 @views.route('/minuscart')
 @login_required
 def minus_cart():
     if request.method == 'GET':
         cart_id = request.args.get('cart_id')
         cart_item = Cart.query.get(cart_id)
+
         if cart_item.quantity > 1:
             cart_item.quantity -= 1
         db.session.commit()
@@ -167,6 +171,7 @@ def remove_cart():
         db.session.commit()
 
         cart = Cart.query.filter_by(customer_link=current_user.id).all()
+
         
         amount=0
         for item in cart:
@@ -201,9 +206,9 @@ def place_order():
                 'total_amount': total + 10000,  # including shipping charge
                 'currency': 'BDT',
                 'tran_id': f'TRX_{int(total * 100)}_{current_user.id}',
-                'success_url': 'http://localhost:5000/orders',
-                'fail_url': 'http://localhost:5000/cart',
-                'cancel_url': 'http://localhost:5000/cart',
+                'success_url': 'http://localhost:5000/payment-success',
+                'fail_url': 'http://localhost:5000/payment-failure',
+                'cancel_url': 'http://localhost:5000/payment-cancel',
                 'cus_name': current_user.username,
                 'cus_email': current_user.email,
                 'cus_phone': '01777777777',
