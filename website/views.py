@@ -19,7 +19,7 @@ def home():
 
     return render_template('home.html', items=products, cart_items=cart_items, wished_items=wished_items)
 
-@views.route('/add-to-cart/<int:item_id>')
+@views.route('/add-to-cart/<int:item_id>', methods = ['GET','POST'])
 @login_required
 def add_to_cart(item_id):
     target = Product.query.get(item_id)
@@ -66,7 +66,7 @@ def show_cart():
     
     return render_template('cart.html', cart=cart, amount=amount, total=(amount+10000))
 
-@views.route('/add-to-wishlist/<int:item_id>')
+@views.route('/add-to-wishlist/<int:item_id>', methods = ['GET','POST'])
 @login_required
 def add_to_wishlist(item_id):
     target = Product.query.get(item_id)
@@ -291,3 +291,19 @@ def search():
     
     flash(f'Ops! Something went wrong.')
     return render_template('search.html')
+
+@views.route('/product-details/<int:item_id>')
+def product_details(item_id):
+   target = Product.query.get(item_id)
+   if target:
+       data = {'product_id':item_id,
+               'product_name':target.product_name,
+               'product_details':target.product_details,
+               'current_price':target.current_price,
+               'previous_price':target.previous_price,
+               'in_stock':target.in_stock,
+               'product_picture':target.product_picture,
+               'date_added':target.date_added
+               }
+       return render_template('product_details.html', data=data)
+   return render_template('404.html')

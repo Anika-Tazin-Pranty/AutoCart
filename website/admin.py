@@ -17,6 +17,7 @@ def add_new_car():
         if form.validate_on_submit():
             # retriving data from form
             product_name = form.product_name.data
+            product_details = form.product_details.data
             current_price = form.current_price.data
             previous_price = form.previous_price.data
             in_stock = form.in_stock.data
@@ -30,6 +31,7 @@ def add_new_car():
             # creating new car obj
             new_car = Product()
             new_car.product_name = product_name
+            new_car.product_details = product_details
             new_car.current_price = current_price
             new_car.previous_price = previous_price
             new_car.in_stock = in_stock
