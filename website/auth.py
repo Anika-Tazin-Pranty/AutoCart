@@ -53,7 +53,6 @@ def login():
         if customer: # if customer exists in db
             
             if customer.verify_password(password = password): #returns Boolean
-
                 if customer.id in admin_id:
                     login_user(customer)
                     flash(f'Welcome to AutoCart Admin Panel, {customer.username}')
@@ -63,7 +62,6 @@ def login():
                     login_user(customer)
                     flash(f'Welcome to AutoCart, {customer.username}')
                     return redirect('/') # redirect ot homepage
-
             else:
                 flash('Incorrect Credentials')
 
