@@ -17,7 +17,7 @@ def home():
         cart_items = []
         wished_items = []
 
-    return render_template('home.html', items=products, cart_items=cart_items, wished_items=wished_items)
+    return render_template('home.html', items=products, cart_items=cart_items, wished_items=wished_items, user_id = current_user.id if current_user.is_authenticated else 0)
 
 @views.route('/add-to-cart/<int:item_id>', methods = ['GET','POST'])
 @login_required

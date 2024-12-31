@@ -182,5 +182,5 @@ def display_customers():
 @login_required
 def admin_page():
     if current_user.id in admin_id:
-        return render_template('admin.html')
+        return render_template('admin.html', admin_id = current_user.id)
     return render_template('404.html')
