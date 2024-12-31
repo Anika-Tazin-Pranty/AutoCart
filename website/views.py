@@ -124,8 +124,10 @@ def plus_cart():
     if request.method == 'GET':
         cart_id = request.args.get('cart_id')
         cart_item = Cart.query.get(cart_id)
-        if cart_item.product.in_stock > 0:
-            cart_item.quantity += 1
+        if cart_item.quantity + 1 > cart_item.product.in_stock:
+            return jsonify({'error': 'Not enough stock available'}), 400
+        
+        cart_item.quantity += 1
         db.session.commit()
 
         cart = Cart.query.filter_by(customer_link=current_user.id).all()
@@ -135,7 +137,7 @@ def plus_cart():
             amount += (item.product.current_price * item.quantity)
 
         data = {'quantity': cart_item.quantity, 'amount': amount, 'total': amount + 10000}
-
+        
         return jsonify(data)
 
 
@@ -145,8 +147,10 @@ def minus_cart():
     if request.method == 'GET':
         cart_id = request.args.get('cart_id')
         cart_item = Cart.query.get(cart_id)
-        if cart_item.quantity > 1:
-            cart_item.quantity -= 1
+        if cart_item.quantity - 1 < 1:
+            return jsonify({'error': 'Negative quantity not allowed'}), 400
+        
+        cart_item.quantity -= 1
         db.session.commit()
 
         cart = Cart.query.filter_by(customer_link=current_user.id).all()
