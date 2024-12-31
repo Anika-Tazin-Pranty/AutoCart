@@ -307,3 +307,24 @@ def product_details(item_id):
                }
        return render_template('product_details.html', data=data)
    return render_template('404.html')
+
+@views.route('/payment-success' , methods = ['GET' , 'POST'])
+@login_required
+def payment_success():
+    orders = Order.query.filter_by(customer_link = current_user.id).all()
+    flash('Payment Successful!')
+    return render_template('orders.html', orders = orders)
+
+@views.route('/payment-failure' , methods = ['GET', 'POST'])
+@login_required
+def payment_failure():
+    cart = Cart.query.filter_by(customer_link = current_user.id).all()
+    flash('Payment Failed!')
+    return render_template('cart.html', cart = cart)
+
+@views.route('/payment-cancel', methods = ['GET', 'POST'])
+@login_required
+def payment_cancel():
+    orders = Order.query.filter_by(customer_link = current_user.id).all()
+    flash('Payment Cancelled!')
+    return render_template('orders.html', orders = orders)
