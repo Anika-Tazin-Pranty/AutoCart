@@ -60,4 +60,4 @@ def handle_update_username(data):
 
 
 if __name__ == '__main__':
-    socketio.run(app, debug = True) # default port = 5000
+    socketio.run(app) # default port = 5000
